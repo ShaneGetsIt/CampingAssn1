@@ -34,7 +34,7 @@ int main()
 		<< "You will need to bring " << (campers * nightsStaying * 2) << " meals in total - \n" 
 		// assuming 2 meals per camper per night
 		<< "as well as " << firesPlanned << " fire-starters and\n"         
-		<< (firesPlanned / 2) << " bags of marshmallows for roasting.\n" // assuming 5 bags of marshmallows per fire
+		<< (firesPlanned / 2) << " bags of marshmallows for roasting.\n" // assuming .5 bags of marshmallows per fire
 		<< "Get ready for an unforgettable outdoor adventure!" << endl;						
 
 	return 0;
