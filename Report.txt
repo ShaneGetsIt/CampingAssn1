@@ -1,14 +1,15 @@
 #*********************************#
-.......Joan of Arch's Camp Supplies
-Size of camping party:............5
+........Shane Price's Camp Supplies
+Size of camping party:............4
 Duration of stay:.................3
 #---------------------------------#
 #---------------------------------#
 #.........Things to pack..........#
-Need: 3x 2-man OR 1x 5-man tent(s)
-- - - Sleeping bags...............5
-- - - Fire starters...............6
-- - - Lbs of Marshmallow.......7.50
+Need: 2x 2-man OR 1x 5-man tent(s)
+- - - Sleeping bags...............4
+- - - Fire starters...............9
+- - - Lbs of Marshmallow.......9.00
+Extra item to pack: ........Hammock
 #---------------------------------#
 ......And lots of camping spirit!!!
 #*********************************#

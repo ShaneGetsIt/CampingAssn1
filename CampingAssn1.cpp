@@ -10,11 +10,14 @@ int main()
 {
 	// these are the variables to hold user input
 	string name;
+	string extraItem;
+	char ch;
 	int campers;
 	int nightsStaying;
 	int fireStarter;
 	double lbsMarshmallow;
 	int firesPlanned;
+	int menu;
 	ofstream outData;
 
 	cout << "Welcome! This is Shane's Camping Supply List Generator!" << endl
@@ -55,8 +58,33 @@ int main()
 		cout << "The value needs to be an integer! I've set the value to 2" << endl;
 	}
 	
-	cout << firesPlanned << " campfires/day... Awesome- I've prepared your list!\n"
-		<< "...Here it is!!!" << endl << endl << endl;
+	cout << firesPlanned << " campfires/day... Alright, now..." << endl
+		<< "is there anything else you would like to add to " << endl
+		<< "your camping list ? Enter Y for yes" << endl;
+
+	cin.clear();          //clear and reset istream in fail state
+	cin.ignore(50, '\n');
+	
+	cin >> ch;		  //get user response for adding an extra item
+	if (ch == 'y' || ch == 'Y') {
+		cin.ignore(1, '/n');
+		cout << "Please enter the item you would like to add:" << endl;
+		getline(cin, extraItem);
+		cout << extraItem << " - got it!" << endl;
+	}
+	else
+		cout << "No extra items to add - got it!" << endl;
+
+	cout << "Awesome - I've prepared your list!" << endl
+		<< "How would you like to proceed?" << endl << endl
+		<< "1 = Save to file only" << endl
+		<< "2 = Display on screen only" << endl
+		<< "3 = Save and display on screen" << endl;
+	
+	cin >> menu;
+
+	cout << endl << "Processing your request..." << endl
+		<< "...here you go!!!" << endl << endl << endl;
 
 	//initialize fireStarter variable; set # of fire starters to bring = fires
 	//planned per day times the # of nights the user plans to be camping
@@ -69,9 +97,12 @@ int main()
 		//lbsMarshmallow should be appropriate for the "derived value" requirement
 		//listed for assignment 2							
 
-	
+	switch (menu)
+	{
+	case 1:
+
 		// now we can output the camping supply list to a file "Report.txt"
-	outData.open("Report.txt");
+		outData.open("Report.txt");
 		outData << "#*********************************#" << endl;
 		outData << setw(19) << setfill('.') << name    //name the camping list
 			<< left << "'s Camp Supplies" << endl
@@ -92,45 +123,119 @@ int main()
 			<< left << setw(28) << "- - - Fire starters"
 			<< right << setw(7) << fireStarter << endl //print # of fire starters to bring
 			<< left << setw(28) << "- - - Lbs of Marshmallow"
-			<< right << setw(7) << lbsMarshmallow << endl //print weight of marshmallows to bring
-			<< "#" << setfill('-') << setw(34) << "#" << endl
+			<< right << setw(7) << lbsMarshmallow << endl; //print weight of marshmallows to bring
+		if (ch == 'y' || ch == 'Y')
+			outData << left << "Extra item to pack: "
+			<< right << setw(15) << extraItem << endl;
+		outData << "#" << setfill('-') << setw(34) << "#" << endl
 			<< setfill('.') << setw(26) << "And lots of camping "
-			<< left << "spirit!!!" << endl 
-			<< "#*********************************#" 
+			<< left << "spirit!!!" << endl
+			<< "#*********************************#"
 			<< endl << endl << endl;
-	outData.close();
+		outData.close();
+		break;
 
-	cout << "#*********************************#" << endl;
-	cout << setw(19) << setfill('.') << name    //name the camping list
-		<< left << "'s Camp Supplies" << endl
-		<< showpoint << fixed << setprecision(2) //will only apply to lbsMarshmallow variable
-		<< setw(28) << "Size of camping party:"
-		<< right << setw(7) << campers << endl  //set party size = campers variable
-		<< left << setw(28) << "Duration of stay:"
-		<< right << setw(7) << nightsStaying << endl  //duration of stay = nightsStaying
-		<< setfill('-') << "#" << setw(34) << "#" << endl
-		<< "#" << setw(34) << "#" << endl
-		<< setfill('.') << "#" << setw(16) << "Things "
-		<< left << setw(17) << "to pack" << "#" << endl
-		<< "Need: " << static_cast<int>((campers / 2.0) + .5)      //want to round up for both 2 man and
-		<< "x 2-man OR " << static_cast<int>((campers / 5.0) + .8) //5 man tents thus adding .5 & .8 to
-		<< "x 5-man tent(s)" << endl							   //static_cast<int>
-		<< setw(28) << "- - - Sleeping bags"
-		<< right << setw(7) << campers << endl   //set # of sleeping bags = campers variable
-		<< left << setw(28) << "- - - Fire starters"
-		<< right << setw(7) << fireStarter << endl //print # of fire starters to bring
-		<< left << setw(28) << "- - - Lbs of Marshmallow"
-		<< right << setw(7) << lbsMarshmallow << endl //print weight of marshmallows to bring
-		<< "#" << setfill('-') << setw(34) << "#" << endl
-		<< setfill('.') << setw(26) << "And lots of camping "
-		<< left << "spirit!!!" << endl
-		<< "#*********************************#"
-		<< endl << endl << endl;
+	case 2:
+		cout << "#*********************************#" << endl;
+		cout << setw(19) << setfill('.') << name    //name the camping list
+			<< left << "'s Camp Supplies" << endl
+			<< showpoint << fixed << setprecision(2) //will only apply to lbsMarshmallow variable
+			<< setw(28) << "Size of camping party:"
+			<< right << setw(7) << campers << endl  //set party size = campers variable
+			<< left << setw(28) << "Duration of stay:"
+			<< right << setw(7) << nightsStaying << endl  //duration of stay = nightsStaying
+			<< setfill('-') << "#" << setw(34) << "#" << endl
+			<< "#" << setw(34) << "#" << endl
+			<< setfill('.') << "#" << setw(16) << "Things "
+			<< left << setw(17) << "to pack" << "#" << endl
+			<< "Need: " << static_cast<int>((campers / 2.0) + .5)      //want to round up for both 2 man and
+			<< "x 2-man OR " << static_cast<int>((campers / 5.0) + .8) //5 man tents thus adding .5 & .8 to
+			<< "x 5-man tent(s)" << endl							   //static_cast<int>
+			<< setw(28) << "- - - Sleeping bags"
+			<< right << setw(7) << campers << endl   //set # of sleeping bags = campers variable
+			<< left << setw(28) << "- - - Fire starters"
+			<< right << setw(7) << fireStarter << endl //print # of fire starters to bring
+			<< left << setw(28) << "- - - Lbs of Marshmallow"
+			<< right << setw(7) << lbsMarshmallow << endl; //print weight of marshmallows to bring
+		if (ch == 'y' || ch == 'Y')
+			cout << left << "Extra item to pack: "
+			<< right << setw(15) << extraItem << endl;
+		cout << "#" << setfill('-') << setw(34) << "#" << endl
+			<< setfill('.') << setw(26) << "And lots of camping "
+			<< left << "spirit!!!" << endl
+			<< "#*********************************#"
+			<< endl << endl << endl;
+		break;
 
+	case 3:
+		cout << "#*********************************#" << endl;
+		cout << setw(19) << setfill('.') << name    //name the camping list
+			<< left << "'s Camp Supplies" << endl
+			<< showpoint << fixed << setprecision(2) //will only apply to lbsMarshmallow variable
+			<< setw(28) << "Size of camping party:"
+			<< right << setw(7) << campers << endl  //set party size = campers variable
+			<< left << setw(28) << "Duration of stay:"
+			<< right << setw(7) << nightsStaying << endl  //duration of stay = nightsStaying
+			<< setfill('-') << "#" << setw(34) << "#" << endl
+			<< "#" << setw(34) << "#" << endl
+			<< setfill('.') << "#" << setw(16) << "Things "
+			<< left << setw(17) << "to pack" << "#" << endl
+			<< "Need: " << static_cast<int>((campers / 2.0) + .5)      //want to round up for both 2 man and
+			<< "x 2-man OR " << static_cast<int>((campers / 5.0) + .8) //5 man tents thus adding .5 & .8 to
+			<< "x 5-man tent(s)" << endl							   //static_cast<int>
+			<< setw(28) << "- - - Sleeping bags"
+			<< right << setw(7) << campers << endl   //set # of sleeping bags = campers variable
+			<< left << setw(28) << "- - - Fire starters"
+			<< right << setw(7) << fireStarter << endl //print # of fire starters to bring
+			<< left << setw(28) << "- - - Lbs of Marshmallow"
+			<< right << setw(7) << lbsMarshmallow << endl; //print weight of marshmallows to bring
+		if (ch == 'y' || ch == 'Y')
+			cout << left << "Extra item to pack: "
+			<< right << setw(15) << extraItem << endl;
+		cout << "#" << setfill('-') << setw(34) << "#" << endl
+			<< setfill('.') << setw(26) << "And lots of camping "
+			<< left << "spirit!!!" << endl
+			<< "#*********************************#"
+			<< endl << endl << endl;
 
-	//to be clear- from the instructions it seems we are only being asked to output to a file
-	//on the off chance you wanted common output to console as well as to a file
-	//I have added this functionality as well
+		outData.open("Report.txt");
+		outData << "#*********************************#" << endl;
+		outData << setw(19) << setfill('.') << name    //name the camping list
+			<< left << "'s Camp Supplies" << endl
+			<< showpoint << fixed << setprecision(2) //will only apply to lbsMarshmallow variable
+			<< setw(28) << "Size of camping party:"
+			<< right << setw(7) << campers << endl  //set party size = campers variable
+			<< left << setw(28) << "Duration of stay:"
+			<< right << setw(7) << nightsStaying << endl  //duration of stay = nightsStaying
+			<< setfill('-') << "#" << setw(34) << "#" << endl
+			<< "#" << setw(34) << "#" << endl
+			<< setfill('.') << "#" << setw(16) << "Things "
+			<< left << setw(17) << "to pack" << "#" << endl
+			<< "Need: " << static_cast<int>((campers / 2.0) + .5)      //want to round up for both 2 man and
+			<< "x 2-man OR " << static_cast<int>((campers / 5.0) + .8) //5 man tents thus adding .5 & .8 to
+			<< "x 5-man tent(s)" << endl							   //static_cast<int>
+			<< setw(28) << "- - - Sleeping bags"
+			<< right << setw(7) << campers << endl   //set # of sleeping bags = campers variable
+			<< left << setw(28) << "- - - Fire starters"
+			<< right << setw(7) << fireStarter << endl //print # of fire starters to bring
+			<< left << setw(28) << "- - - Lbs of Marshmallow"
+			<< right << setw(7) << lbsMarshmallow << endl; //print weight of marshmallows to bring
+		if (ch == 'y' || ch == 'Y')
+			outData << left << "Extra item to pack: "
+			<< right << setw(15) << extraItem << endl;
+		outData << "#" << setfill('-') << setw(34) << "#" << endl
+			<< setfill('.') << setw(26) << "And lots of camping "
+			<< left << "spirit!!!" << endl
+			<< "#*********************************#"
+			<< endl << endl << endl;
+		outData.close();
+		break;
+	default:
+		cout << "Invalid menu selection - no output will be generated" << endl
+			<< "Please restart the program to try again." << endl;
+		return 1;
+
+	}
 
 
 
