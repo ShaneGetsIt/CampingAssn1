@@ -60,7 +60,7 @@ int main()
 	
 	cout << firesPlanned << " campfires/day... Alright, now..." << endl
 		<< "is there anything else you would like to add to " << endl
-		<< "your camping list ? Enter Y for yes" << endl;
+		<< "your camping list? Enter Y for yes" << endl;
 
 	cin.clear();          //clear and reset istream in fail state
 	cin.ignore(50, '\n');
@@ -69,7 +69,7 @@ int main()
 	if (ch == 'y' || ch == 'Y') {
 		cin.ignore(1, '/n');
 		cout << "Please enter the item you would like to add:" << endl;
-		getline(cin, extraItem);
+		getline(cin, extraItem);//extraItem initialized
 		cout << extraItem << " - got it!" << endl;
 	}
 	else
