@@ -66,7 +66,7 @@ int main()
 	cin.ignore(50, '\n');
 	
 	cin >> ch;		  //get user response for adding an extra item
-	if (ch == 'y' || ch == 'Y') {
+	if (ch == 'y' || ch == 'Y') {  //COVER THE FIRST IF ELSE BLOCK
 		cin.ignore(1, '/n');
 		cout << "Please enter the item you would like to add:" << endl;
 		getline(cin, extraItem);//extraItem initialized
@@ -97,7 +97,7 @@ int main()
 		//lbsMarshmallow should be appropriate for the "derived value" requirement
 		//listed for assignment 2							
 
-	switch (menu)
+	switch (menu)  //switch statement to handle menu selection******
 	{
 	case 1:
 
@@ -125,8 +125,8 @@ int main()
 			<< left << setw(28) << "- - - Lbs of Marshmallow"
 			<< right << setw(7) << lbsMarshmallow << endl; //print weight of marshmallows to bring
 		if (ch == 'y' || ch == 'Y')
-			outData << left << "Extra item to pack: "
-			<< right << setw(15) << extraItem << endl;
+			outData << left << "Extra item to pack: "  //THIS IS TO COVER THE SECOND IF ELSE BLOCK
+			<< right << setw(15) << extraItem << endl;  //if user wanted to add an extra item we update file
 		outData << "#" << setfill('-') << setw(34) << "#" << endl
 			<< setfill('.') << setw(26) << "And lots of camping "
 			<< left << "spirit!!!" << endl
@@ -233,7 +233,7 @@ int main()
 	default:
 		cout << "Invalid menu selection - no output will be generated" << endl
 			<< "Please restart the program to try again." << endl;
-		return 1;
+		return 1; //exit program with error code if invalid menu selection
 
 	}
 
