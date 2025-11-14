@@ -81,7 +81,7 @@ int main()
 			<< "enter \"done\" when finished" << endl << endl;
 		outData.open(extras);
 
-		if (!outData)
+		if (!outData) // open output file; handle exceptions
 		{
 			cout << "Unable to open output file";
 			return 1;
