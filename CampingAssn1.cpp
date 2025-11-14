@@ -18,7 +18,7 @@ void bannerAndInput(string& name, int& campers, int& nightsStaying, int& firesPl
 void extrasFunc(char ch, string& extraItem);
 void calculations(int campers, int nightsStaying, int firesPlanned, int& fireStarter,
 	double& lbsMarshmallow);
-void menuSelect(int& menu);
+void menuSelect(int& menu); //value returning function to get user menu selection
 void printSave(string name, int campers, int nightsStaying, int firesPlanned, int fireStarter,
 	double lbsMarshmallow, char ch);
 void itFunc(int nightsStaying, string activity, bool& itinerary);
@@ -29,7 +29,7 @@ int main()
 	// these are the variables to hold user input
 	string name;
 	string extraItem;
-	string activity;
+	//string activity;
 	char ch;
 	int campers;
 	int nightsStaying;
