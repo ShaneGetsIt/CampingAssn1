@@ -5,10 +5,24 @@
 #include <string>
 
 using namespace std;
+//using std::cout;
+//using std::endl;
 
 const string extras = "Extras.txt";
 const string it = "It.txt";
 const string rpt = "Report.txt";
+
+
+// Function prototypes
+void bannerAndInput(string& name, int& campers, int& nightsStaying, int& firesPlanned, char& ch);
+void extrasFunc(char ch, string& extraItem);
+void calculations(int campers, int nightsStaying, int firesPlanned, int& fireStarter,
+	double& lbsMarshmallow);
+void menuSelect(int& menu);
+void printSave(string name, int campers, int nightsStaying, int firesPlanned, int fireStarter,
+	double lbsMarshmallow, char ch);
+void itFunc(int nightsStaying, string activity, bool& itinerary);
+
 
 int main()
 {
@@ -23,77 +37,119 @@ int main()
 	double lbsMarshmallow;
 	int firesPlanned;
 	int menu;
-	bool itinerary = false;
-	ofstream outData;
-	ifstream inData;
+	bool itinerary;
+	//ofstream outData;
+	//ifstream inData;
 
-	cout << "Welcome! This is Shane's Camping Supply List Generator!" << endl
-		<< "Allow me to take some information to help with planning your trip-\n"
-		<< "- to begin, what is your name?  ";
-	
+
+	bannerAndInput(name, campers, nightsStaying, firesPlanned, ch);
+	extrasFunc(ch, extraItem);
+	calculations(campers, nightsStaying, firesPlanned, fireStarter,
+		lbsMarshmallow);
+	//void menuSelect(int& menu);
+	printSave(name, campers, nightsStaying, firesPlanned, fireStarter,
+		lbsMarshmallow, ch);
+
+
+	cout << "# Thanks for allowing me to assist you  #" << endl
+		<< "# with planning! I hope you found this  #" << endl
+		<< "# tool to be helpful - enjoy your trip! #"
+		<< endl << endl;
+
+
+	return 0;
+}
+
+
+void bannerAndInput(string& name, int& campers, int& nightsStaying, int& firesPlanned, char& ch)
+{
+	cout << "#=======================================#" << endl
+		<< "#===== Welcome! You are now using ======#" << endl
+		<< "# Shane's Camping Supply List Generator #" << endl
+		<< "# Allow me to take some information to  #" << endl
+		<< "#  help plan your trip - to begin, what #" << endl
+		<< "#======================= is your name ? #" << endl << endl;
+
 	getline(cin, name);
-	
-	cout << endl << endl << "Okay, " << name << ", and how many campers will be going, "
-		<< "including yourself? " << endl;
-	
+
+	cout << endl << endl << "#== Okay, " << left << setfill('=')
+		<< setw(25) << name + "  " << "=====#" << endl
+		<< "#== and how many campers will be going, #" << endl
+		<< "#=================  including yourself? #" << endl << endl;
+
 	if (!(cin >> campers)) {//initialize campers variable; handle non-numerical entries
 		campers = 1; //invalid entries will set variable equal to 1
-		cout << "The value needs to be an integer! I've set the value to 1" << endl;
+		cout << "#== The value needs to be an integer! ==#" << endl
+			<< "#==== = = - -  I've set the value to 1 =#" << endl << endl;
 	}
-	
-	cout << campers << " Campers\n" << "Great! Now, how many nights " << endl
-		<< "will you be staying ? " << endl; 
-		
+
+	cout << endl << "# " << campers << " Campers, okay! Now, how many nights #" << endl
+		<< "#======= = - - -   will you be staying? #" << endl << endl;
+
 
 	cin.clear();          //clear and reset istream in fail state
 	cin.ignore(50, '\n');
-	
+
 	if (!(cin >> nightsStaying)) {//initialize nightsStaying variable; handle exceptions
 		nightsStaying = 1; //invalid entries will set variable equal to 1
-		cout << "The value needs to be an integer! I've set the value to 1" << endl;
+		cout << "#== The value needs to be an integer! ==#" << endl
+			<< "#==== = = - -  I've set the value to 1 =#" << endl << endl;
 	}
 
-	cout << nightsStaying << " Nights\n" << "Okay- and how many fires do you" << endl
-		<< "plan to have each day ? " << endl;
+	cout << endl << "# " << nightsStaying << " Nights, okay! Now, how many fires ==#" << endl
+		<< "#==== - do you plan to have each day? ==#" << endl;
 
 
 	cin.clear();          //clear and reset istream in fail state
 	cin.ignore(50, '\n');
-	
+
 	if (!(cin >> firesPlanned)) {//initialize firesPlanned variable; handle exceptions
 		firesPlanned = 2; //invalid entries will set variable equal to 2
-		cout << "The value needs to be an integer! I've set the value to 2" << endl;
+		cout << "#== The value needs to be an integer! ==#" << endl
+			<< "#==== = = - -  I've set the value to 2  =#" << endl << endl;
 	}
-	
-	cout << firesPlanned << " Campfires/day... Alright, now..." << endl
-		<< "are there any other items you would like to add to " << endl
-		<< "your camping list? Enter Y for yes" << endl;
+
+	cout << endl << "# " << firesPlanned << " Campfires/day... Alright, now...  ==#"
+		<< endl << "# are there any other items you would ==#" << endl
+		<< "# like to add to your camping list?  ===#" << endl
+		<< "#==== = = - - - -    Enter Y for yes ===#" << endl << endl;
 
 	cin.clear();          //clear and reset istream in fail state
 	cin.ignore(50, '\n');
-	
+
 	cin >> ch;		  //get user response for adding an extra item
-	
+}
+
+void extrasFunc(char ch, string& extraItem)
+{
+	ofstream outData;
 	if (ch == 'y' || ch == 'Y') {  //COVER THE FIRST IF ELSE BLOCK
 
 		cin.ignore(1, '/n');
-		cout << endl << "Please enter each item you would like to add one at a time - "
-			<< "enter \"done\" when finished" << endl << endl;
+		cout << endl << "# Please enter each item you would like #" << endl
+			<< "#= to add one at a time - enter \"done\" =#" << endl
+			<< "#======= = = = - - - -  when finished ==#" << endl << endl;
 		outData.open(extras);
 
-		if (!outData)
-		{
-			cout << "Unable to open output file";
-			return 1;
-		}
+
+
+
+		//if (!outData)
+		//{
+		//	cout << "#====  Unable to open output file   ====#";
+		//	return 1;
+		//}
+
+
+
 
 		while (extraItem != "done" && extraItem != "DONE") //while loop, extraItem is initialized as ""
-														//requirement for assignment 4
+			//requirement for assignment 4
 		{
 			getline(cin, extraItem);//extraItem initialized to user input
 			if (extraItem != "done" && extraItem != "DONE")
 			{
-				cout << extraItem << " - got it!" << endl;
+				cout << "#=== " << left << setw(35) << extraItem + " - got it! ===" << "#" << endl;
 				outData << right << setfill('.') << setw(35) << extraItem << endl;
 			}
 		}
@@ -102,65 +158,73 @@ int main()
 		outData.close();
 	}
 	else
-		cout << "No extra items to add - got it!" << endl << endl;
+		cout << "#===   No extra items to add - got it! =#" << endl << endl;
 
+}
 
+void calculations(int campers, int nightsStaying, int firesPlanned, int& fireStarter,
+	double& lbsMarshmallow)
+{
 	//initialize fireStarter variable; set # of fire starters to bring = fires
-	//planned per day times the # of nights the user plans to be camping
+//planned per day times the # of nights the user plans to be camping
 	fireStarter = firesPlanned * nightsStaying;
 
 	//initialize lbsMarshmallow variable; set weight of marshmallow to bring = total # 
 	//of campfires planned during the user's stay times the number of campers; then 
 	//divide by 4, this assumes each person will consume .25 lbs of marshmallow per fire
-	lbsMarshmallow = (fireStarter * campers) / 4.0; 
-		//lbsMarshmallow should be appropriate for the "derived value" requirement
-		
+	lbsMarshmallow = (fireStarter * campers) / 4.0;
+	//lbsMarshmallow should be appropriate for the "derived value" requirement
 
-	//do...while loop requirement for assignment 4
+}
+
+void menuSelect(int& menu)
+{
+	cout << "#---- How would you like to proceed? ---#" << endl << endl
+		<< "#----  1 = Make/Replace Itinerary   ----#" << endl
+		<< "#----  2 = Save and display on screen  -#" << endl
+		<< "#----  3 = Save to file only   ---------#" << endl << endl;
+	cin >> menu;//get user menu selection
+}
+
+void printSave(string name, int campers, int nightsStaying, int firesPlanned, int fireStarter,
+	double lbsMarshmallow, char ch)
+
+
+{
+	int menu;
+	string activity;
+	string extraItem;
+	bool itinerary;
+	ofstream outData;
+	ifstream inData;
+
 	do {
-		cout << "How would you like to proceed?" << endl << endl
-			<< "1 = Make/Replace Itinerary" << endl
-			<< "2 = Save and display on screen" << endl
-			<< "3 = Save to file only" << endl << endl;
 
-		cin >> menu;//get user menu selection
-		
+
+
+		menuSelect(menu);
+
 		switch (menu) {
 		case 1:
-			itinerary = true; //set itinerary boolean to true if user wants to create itinerary
-			outData.open(it);
-			cout << endl << "Let's build an itinerary for your trip!" << endl << endl;
-			cin.clear();
-			cin.ignore(1, '\n');
-			for (int n = 1; n <= nightsStaying; n++) //for loop to get activities for each day
-												//for loop requirement for assignment 4
-			{
-				cout << "What activity do you have planned for day " << n << "?" << endl
-					<< "You can say things like \"Kayaking\", \"Hiking\", or \"Fishing\"" << endl;
-				getline(cin, activity);
-				cout << "<(" << activity << ") added to itinerary>" << endl << endl;
-				outData << left << setfill(' ') << "*Day " << right << setw(2) << n 
-					<< ": " << right << setw(25) << activity << "*" << endl;
-			}
-			outData.close();
-			cout << "Perfect! I've created your personalized itinerary." << endl;
+			itFunc(nightsStaying, activity, itinerary);
 			break;
 
+
 		case 2:
-			cout << "Printing list to screen" << endl;
+			cout << "#=====   Printing list to screen   =====#" << endl << endl << endl;
 			if (itinerary) //if itinerary was created, read from 'it' file
 			{
 				inData.open(it);
 
-				if (!inData) // open input file; handle exceptions
-				{
-					cout << "Cannot open input file - exiting program" << endl << endl;
-					return 1;
-				}
+				//if (!inData) // open input file; handle exceptions
+				//{
+				//	cout << "#== Cannot open file, exiting program ==#" << endl << endl;
+				//	return 1;
+				//}
 
 				cout << "#*********************************#" << endl
-					<< setw(19) << setfill('.') << name    //
-					<< left << setw(17) << "'s Itinerary" << endl
+					<< right << setw(19) << setfill('.') << name    //
+					<< left << setw(16) << "'s Itinerary" << endl
 					<< right << "#*********************************#" << endl;
 
 
@@ -196,13 +260,13 @@ int main()
 			if (ch == 'y' || ch == 'Y')
 			{
 				inData.open(extras);
-				
+
 				if (!inData)//open input file; handle exceptions
 				{
-					cout << "Unable to open file - exiting program..." << endl;
+					cout << "# Unable to open file, exiting program =#" << endl;
 				}
 
-				cout << right << setw(35) << setfill('.') 
+				cout << right << setw(35) << setfill('.')
 					<< "Extra items to pack" << endl;
 
 				while (inData) // read and print extra items to screen
@@ -218,12 +282,12 @@ int main()
 				<< "#*********************************#"
 				<< endl << endl << endl;
 
-		case 3:			
+		case 3:
 			outData.open(rpt);
-			cout << "Saving your report now..." << endl;
+			cout << "#======    Saving your report now...  ==#" << endl;
 			if (itinerary) //if itinerary was created, read from 'it' file
 			{
-				
+
 				inData.open(it);
 
 				outData << "#*********************************#" << endl
@@ -232,11 +296,11 @@ int main()
 					<< right << "#*********************************#" << endl;
 
 
-				if (!inData) //open input file; handle exceptions
-				{
-					cout << "Cannot open input file - exiting program" << endl << endl;
-					return 1;
-				}
+				//if (!inData) //open input file; handle exceptions
+				//{
+				//	cout << "#== Cannot open file, exiting program ==#" << endl << endl;
+				//	return 1;
+				//}
 
 				while (inData) // read from itinerary file and write to report file
 				{
@@ -283,24 +347,48 @@ int main()
 				<< left << "spirit!!!" << endl
 				<< "#*********************************#"
 				<< endl << endl << endl;
-			
-			cout << "Save complete!" << endl;
+
+			cout << "#========      Save complete!     ======#" << endl;
 			break;
 
 		default:
-			cout << "Invalid menu selection - no output will be generated" << endl
-				<< "Please restart the program to try again." << endl;
-			return 1; //exit program with error code if invalid menu selection
+			cout << "#  Invalid menu selection - no output   #" << endl
+				<< "# will be generated. Please restart the #" << endl
+				<< "#============     program to try again. #" << endl;
+			return; //exit program with error code if invalid menu selection
 		}
 	} while (menu == 1);
 
-	cout << "Thanks for allowing me to assist you with planning!" << endl
-		<< "I hope you found this tool to be helpful - enjoy your trip!!"
-		<< endl << endl;
-	
-
-	return 0;
 }
+
+void itFunc(int nightsStaying, string activity, bool& itinerary)
+{
+	ofstream outData;
+
+	itinerary = true; //set itinerary boolean to true if user wants to create itinerary
+	outData.open(it);
+	cout << endl << "# Let's build an itinerary for the trip #" << endl << endl;
+	cin.clear();
+	cin.ignore(1, '\n');
+	for (int n = 1; n <= nightsStaying; n++) //for loop to get activities for each day
+		//for loop requirement for assignment 4
+	{
+		cout << "#==  What activity do you have planned =#" << endl
+			<< "#================ = - -   for day " << n << "? ===#" << endl
+			<< "# (You can say things like \"Kayaking\", =#" << endl
+			<< "#=========   \"Hiking\", or \"Fishing\"  ===#" << endl;
+		getline(cin, activity);
+		cout << "<(" << activity << ") added to itinerary>" << endl << endl;
+		outData << left << setfill(' ') << "*Day " << right << setw(2) << n
+			<< ": " << right << setw(25) << activity << "*" << endl;
+	}
+	outData.close();
+	cout << "# Perfect! I've created your personali- #" << endl
+		<< "#=============          -zed itinerary. #" << endl;
+	//break;
+
+}
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
