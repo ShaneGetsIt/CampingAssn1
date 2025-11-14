@@ -1,2 +1,4 @@
 *Day  1:                   fishing*
-*Day  2:                  kayaking*
+*Day  2:                    hiking*
+*Day  3:                   fishing*
+*Day  4:                    hiking*
