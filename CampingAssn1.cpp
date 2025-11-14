@@ -383,8 +383,8 @@ void itFunc(int nightsStaying, string activity, bool& itinerary)
 			<< ": " << right << setw(25) << activity << "*" << endl;
 	}
 	outData.close();
-	cout << "# Perfect! I've created your personali- #" << endl
-		<< "#=============          -zed itinerary. #" << endl;
+	cout << "# Perfect! I've created your ===========#" << endl
+		<< "#=============  personalized itinerary. #" << endl;
 	//break;
 
 }
