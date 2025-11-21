@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <windows.h>
 
 using namespace std;
 //using std::cout;
@@ -11,20 +12,25 @@ using namespace std;
 const string extras = "Extras.txt";
 const string it = "It.txt";
 const string rpt = "Report.txt";
+const int COLOR = 100;
+const int MAX_ARRAY = 5;
 
 
 // Function prototypes
 void bannerAndInput(string& name, int& campers, int& nightsStaying, int& firesPlanned, char& ch);
-void extrasFunc(char ch, string& extraItem);
+void extrasFunc(char ch, string foodList[], string gearList[], int& foodCount, int& gearCount, int length);
+void addItems(const string foodList[], const string gearList[], int foodCount, int gearCount, int length, 
+	ofstream& outData, bool raiseFlag);
+void printItems(const string foodList[], const string gearList[], int foodCount, int gearCount, int length);
 void calculations(int campers, int nightsStaying, int firesPlanned, int& fireStarter,
 	double& lbsMarshmallow);
-void menuSelect(int& menu); //value returning function to get user menu selection
-void printSave(string name, int campers, int nightsStaying, int firesPlanned, int fireStarter,
-	double lbsMarshmallow, char ch);
+int menuSelect();//int menu);
+void printSave(int foodCount, int gearCount, const string foodList[], const string gearList[], int length, string name,
+	int campers, int nightsStaying, int firesPlanned, int fireStarter, double lbsMarshmallow, char ch, bool& raiseFlag);
 void itFunc(int nightsStaying, string activity, bool& itinerary);
+void colorText();
 
-//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-//SetConsoleTextAttribute()
+enum item {food,gear};
 
 int main()
 {
@@ -38,26 +44,36 @@ int main()
 	int fireStarter;
 	double lbsMarshmallow;
 	int firesPlanned;
-	int menu;
+	//int menu;
 	bool itinerary;
+	bool raiseFlag = false;
+	string foodList[MAX_ARRAY];
+	string gearList[MAX_ARRAY];
+	int foodCount = 0;
+	int gearCount = 0;
 	//ofstream outData;
 	//ifstream inData;
 
-
+	colorText();
 	bannerAndInput(name, campers, nightsStaying, firesPlanned, ch);
-	extrasFunc(ch, extraItem);
+	extrasFunc(ch, foodList, gearList, foodCount, gearCount, MAX_ARRAY);
 	calculations(campers, nightsStaying, firesPlanned, fireStarter,
 		lbsMarshmallow);
 	//void menuSelect(int& menu);
-	printSave(name, campers, nightsStaying, firesPlanned, fireStarter,
-		lbsMarshmallow, ch);
+	printSave(foodCount, gearCount, foodList, gearList, MAX_ARRAY, name, campers, nightsStaying, 
+		firesPlanned, fireStarter, lbsMarshmallow, ch, raiseFlag);
+
+	//if exceptions are raised in printSave function, exit program with error
+	if (raiseFlag)
+	{
+		return 1;
+	}
 
 
 	cout << "# Thanks for allowing me to assist you  #" << endl
 		<< "# with planning! I hope you found this  #" << endl
 		<< "# tool to be helpful - enjoy your trip! #"
 		<< endl << endl;
-
 
 	return 0;
 }
@@ -122,47 +138,166 @@ void bannerAndInput(string& name, int& campers, int& nightsStaying, int& firesPl
 	cin >> ch;		  //get user response for adding an extra item
 }
 
-void extrasFunc(char ch, string& extraItem)
+//void addItems(char ch, string foodItems[], string gearItems[], int& foodCount, int& gearCount)
+//{
+//
+//}//address extrasFunc with this
+
+void extrasFunc(char ch, string foodList[], string gearList[], int& foodCount, int& gearCount, int length)
 {
-	ofstream outData;
+	//ofstream outData;
+	int choice = 0;
+	//int foodCount = 0;
+	//int gearCount = 0;
+	//string foodList[MAX_ARRAY];
+	//string gearList[MAX_ARRAY];
+
 	if (ch == 'y' || ch == 'Y') {  //COVER THE FIRST IF ELSE BLOCK
 
 		cin.ignore(1, '/n');
-		cout << endl << "# Please enter each item you would like #" << endl
-			<< "#= to add one at a time - enter \"done\" =#" << endl
-			<< "#======= = = = - - - -  when finished ==#" << endl << endl;
-		outData.open(extras);
+		cout << "# You may add up to 5 food items and/or #" << endl
+			<< "#===== - - - -            5 gear items =#" << endl << endl;
 
-
-
-
-		//if (!outData)
-		//{
-		//	cout << "#====  Unable to open output file   ====#";
-		//	return 1;
-		//}
-
-
-
-
-		while (extraItem != "done" && extraItem != "DONE") //while loop, extraItem is initialized as ""
-			//requirement for assignment 4
+		while (true)
 		{
-			getline(cin, extraItem);//extraItem initialized to user input
-			if (extraItem != "done" && extraItem != "DONE")
+			//count = 0;
+			cout << endl << "#== Please enter '1' to add food, '2' ==#" << endl
+				<< "#=====  to add gear or '3' to stop  ====#" << endl << endl;
+			cin >> choice;
+
+			while (!choice || choice > 3 || choice < 1)
 			{
-				cout << "#=== " << left << setw(35) << extraItem + " - got it! ===" << "#" << endl;
-				outData << right << setfill('.') << setw(35) << extraItem << endl;
+				cout << "Invalid selection - must enter int's 1-3" << endl;
+				cin.clear();
+				cin.ignore(12, '\n');
+				cin >> choice;
 			}
-		}
+
+			switch (static_cast<item>(choice - 1))
+			{
+			case food:
+
+				if (foodCount < length)
+				{
+					cin.ignore(50, '\n');
+					cout << "#= Enter food item name to add to list =#" << endl << endl;
+					//getline(cin,foodList[foodCount]);
+					getline(cin, foodList[foodCount]);
+					foodCount++;
+				}
+				else
+					cout << " Limit for additional food items reached" << endl << endl;
+				break;
+
+			case gear:
+
+				if (gearCount < length)
+				{
+					cin.ignore(50, '\n');
+					cout << "#= Enter gear item name to add to list =#" << endl
+						<< "# for example: kayak, fishing rod, etc. #" << endl << endl;
+					getline(cin, gearList[gearCount]);
+					gearCount++;
+				}
+				else
+					cout << " Limit for additional gear items reached" << endl << endl;
+				break;
+
+			default:
+				cout << "#== Finished adding additional items  ==#" << endl << endl;
+				return;
+			}
+		
+			
+			//cout << endl << "# Please enter each item you would like #" << endl
+			//	<< "#= to add one at a time - enter \"done\" =#" << endl
+			//	<< "#======= = = = - - - -  when finished ==#" << endl << endl;
+			//outData.open(extras);
+			//***********************************this is part of old extrasFunc()
+			
+			//while (extraItem != "done" && extraItem != "DONE") //while loop, extraItem is initialized as ""
+			//	//requirement for assignment 4
+			//{
+			//	getline(cin, extraItem);//extraItem initialized to user input
+			//	if (extraItem != "done" && extraItem != "DONE")
+			//	{
+			//		cout << "#=== " << left << setw(35) << extraItem + " - got it! ===" << "#" << endl;
+			//		//outData << right << setfill('.') << setw(35) << extraItem << endl;
+			//		//**********come back to this
+			//	}
+			}
 
 
-		outData.close();
+			//outData.close();
+		//}///////////this one
 	}
 	else
 		cout << "#===   No extra items to add - got it! =#" << endl << endl;
 
 }
+
+void addItems(const string foodList[], const string gearList[], int foodCount, int gearCount, int length, 
+	ofstream& outData, bool raiseFlag)
+{
+	int i;
+	
+	if (!outData)
+	{
+		cout << "#=====   Output file is not open   =====#" << endl << endl;
+		raiseFlag = true;
+		return;
+	}
+
+	if (foodCount != 0)
+	{
+		outData << right << setw(35) << setfill('-') << "-" << endl
+			<< setw(35) << setfill('.') << "Extra food to pack" << endl;
+
+		for (i = 0; i < foodCount; i++)
+		{
+			outData << setw(35) << foodList[i] << endl;
+		}
+	}
+
+	if (gearCount != 0)
+	{
+		outData << right << setw(35) << setfill('-') << "-" << endl
+			<< setw(35) << setfill('.') << "Extra gear to pack" << endl;
+
+		for (i = 0; i < gearCount; i++)
+		{
+			outData << setw(35) << gearList[i] << endl;
+		}
+	}
+}
+
+void printItems(const string foodList[], const string gearList[], int foodCount, int gearCount, int length)
+{
+	int i;
+
+	if (foodCount != 0)
+	{
+		cout << right << setw(35) << setfill('-') << "-" << endl
+			<< setw(35) << setfill('.') << "Extra food to pack" << endl;
+
+		for (i = 0; i < foodCount; i++)
+		{
+			cout << setw(35) << foodList[i] << endl;
+		}
+	}
+
+	if (gearCount != 0)
+	{
+		cout << right << setw(35) << setfill('-') << "-" << endl
+			<< setw(35) << setfill('.') << "Extra gear to pack" << endl;
+
+		for (i = 0; i < gearCount; i++)
+		{
+			cout << setw(35) << gearList[i] << endl;
+		}
+	}
+}
+
 
 void calculations(int campers, int nightsStaying, int firesPlanned, int& fireStarter,
 	double& lbsMarshmallow)
@@ -179,18 +314,19 @@ void calculations(int campers, int nightsStaying, int firesPlanned, int& fireSta
 
 }
 
-void menuSelect(int& menu)
+int menuSelect()//int menu)
 {
+	int menu;
 	cout << "#---- How would you like to proceed? ---#" << endl << endl
 		<< "#----  1 = Make/Replace Itinerary   ----#" << endl
 		<< "#----  2 = Save and display on screen  -#" << endl
 		<< "#----  3 = Save to file only   ---------#" << endl << endl;
 	cin >> menu;//get user menu selection
+	return menu;
 }
 
-void printSave(string name, int campers, int nightsStaying, int firesPlanned, int fireStarter,
-	double lbsMarshmallow, char ch)
-
+void printSave(int foodCount, int gearCount, const string foodList[], const string gearList[], int length, string name, 
+	int campers, int nightsStaying, int firesPlanned, int fireStarter, double lbsMarshmallow, char ch, bool& raiseFlag)
 
 {
 	int menu;
@@ -199,12 +335,13 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 	bool itinerary;
 	ofstream outData;
 	ifstream inData;
+	//bool raiseFlag = false;
 
 	do {
 
 
 
-		menuSelect(menu);
+		menu = menuSelect();
 
 		switch (menu) {
 		case 1:
@@ -218,11 +355,12 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 			{
 				inData.open(it);
 
-				//if (!inData) // open input file; handle exceptions
-				//{
-				//	cout << "#== Cannot open file, exiting program ==#" << endl << endl;
-				//	return 1;
-				//}
+				if (!inData) // open input file; handle exceptions
+				{
+				    raiseFlag = true;
+					cout << "#== Cannot open file, exiting program ==#" << endl << endl;
+					return;
+				}
 
 				cout << "#*********************************#" << endl
 					<< right << setw(19) << setfill('.') << name    //
@@ -261,22 +399,30 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 				<< right << setw(7) << lbsMarshmallow << endl; //print weight of marshmallows to bring
 			if (ch == 'y' || ch == 'Y')
 			{
-				inData.open(extras);
-
-				if (!inData)//open input file; handle exceptions
+				printItems(foodList, gearList, foodCount, gearCount, length);
+				if (raiseFlag)
 				{
-					cout << "# Unable to open file, exiting program =#" << endl;
+					return;
 				}
 
-				cout << right << setw(35) << setfill('.')
-					<< "Extra items to pack" << endl;
+				//inData.open(extras);
 
-				while (inData) // read and print extra items to screen
-				{
-					getline(inData, extraItem);
-					cout << extraItem << endl;
-				}
-				inData.close();
+				//if (!inData)//open input file; handle exceptions
+				//{
+				//	raiseFlag = true;
+				//	cout << "#== Cannot open file, exiting program ==#" << endl << endl;
+				//	return;
+				//}
+
+				//cout << right << setw(35) << setfill('.')
+				//	<< "Extra items to pack" << endl;
+
+				//while (inData) // read and print extra items to screen
+				//{
+				//	getline(inData, extraItem);
+				//	cout << extraItem << endl;
+				//}
+				//inData.close();
 			}
 			cout << "#" << setfill('-') << setw(34) << "#" << endl
 				<< setfill('.') << setw(26) << "And lots of camping "
@@ -287,10 +433,19 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 		case 3:
 			outData.open(rpt);
 			cout << "#======    Saving your report now...  ==#" << endl;
+			
 			if (itinerary) //if itinerary was created, read from 'it' file
 			{
 
 				inData.open(it);
+
+				if (!inData) //open input file; handle exceptions
+				{
+					raiseFlag = true;
+					cout << "#== Cannot open file, exiting program ==#" << endl << endl;
+					return;
+				}
+
 
 				outData << "#*********************************#" << endl
 					<< setw(19) << setfill('.') << name    //name the itinerary for the output file
@@ -298,11 +453,6 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 					<< right << "#*********************************#" << endl;
 
 
-				//if (!inData) //open input file; handle exceptions
-				//{
-				//	cout << "#== Cannot open file, exiting program ==#" << endl << endl;
-				//	return 1;
-				//}
 
 				while (inData) // read from itinerary file and write to report file
 				{
@@ -335,14 +485,28 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 				<< right << setw(7) << lbsMarshmallow << endl; //print weight of marshmallows to bring
 			if (ch == 'y' || ch == 'Y')
 			{
-				inData.open(extras);
-				outData << right << setw(35) << setfill('.')
-					<< "Extra items to pack" << endl;
-				while (inData) {
-					getline(inData, extraItem);
-					outData << extraItem << endl;
+				addItems(foodList, gearList, foodCount, gearCount, length, outData, raiseFlag);
+				if (raiseFlag)
+				{
+					return;
 				}
-				inData.close();
+
+				//inData.open(extras);
+
+				//if (!inData)
+				//{
+				//	raiseFlag = true;
+				//	cout << "#== Cannot open file, exiting program ==#" << endl << endl;
+				//	return;
+				//}
+
+				//outData << right << setw(35) << setfill('.')
+				//	<< "Extra items to pack" << endl;
+				//while (inData) {
+				//	getline(inData, extraItem);
+				//	outData << extraItem << endl;
+				//}
+				//inData.close();
 			}
 			outData << "#" << setfill('-') << setw(34) << "#" << endl
 				<< setfill('.') << setw(26) << "And lots of camping "
@@ -357,6 +521,7 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 			cout << "#  Invalid menu selection - no output   #" << endl
 				<< "# will be generated. Please restart the #" << endl
 				<< "#============     program to try again. #" << endl;
+			raiseFlag = true;
 			return; //exit program with error code if invalid menu selection
 		}
 	} while (menu == 1);
@@ -391,6 +556,11 @@ void itFunc(int nightsStaying, string activity, bool& itinerary)
 
 }
 
+void colorText()
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, COLOR);
+}
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
