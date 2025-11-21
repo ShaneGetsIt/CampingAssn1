@@ -2,23 +2,22 @@
 ..............shane's Itinerary.....
 #*********************************#
 *Day  1:                   fishing*
-*Day  2:                    hiking*
-*Day  3:                   fishing*
-*Day  4:                    hiking*
+*Day  2:                   fishing*
 
 #*********************************#
 ..............shane's Camp Supplies
-Size of camping party:............3
-Duration of stay:.................4
+Size of camping party:............2
+Duration of stay:.................2
 #---------------------------------#
 #---------------------------------#
 #.........Things to pack..........#
-Need: 2x 2-man OR 1x 5-man tent(s)
-- - - Sleeping bags...............3
-- - - Fire starters...............8
-- - - Lbs of Marshmallow.......6.00
+Need: 1x 2-man OR 1x 5-man tent(s)
+- - - Sleeping bags...............2
+- - - Fire starters...............4
+- - - Lbs of Marshmallow.......2.00
 ................Extra items to pack
 ..............................kayak
+.............................smiles
 
 #---------------------------------#
 ......And lots of camping spirit!!!

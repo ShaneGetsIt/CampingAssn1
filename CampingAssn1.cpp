@@ -23,6 +23,8 @@ void printSave(string name, int campers, int nightsStaying, int firesPlanned, in
 	double lbsMarshmallow, char ch);
 void itFunc(int nightsStaying, string activity, bool& itinerary);
 
+//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+//SetConsoleTextAttribute()
 
 int main()
 {
