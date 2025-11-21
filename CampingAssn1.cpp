@@ -37,7 +37,7 @@ int main()
 	// these are the variables to hold user input
 	string name;
 	string extraItem;
-	string activity;
+	//string activity;
 	char ch;
 	int campers;
 	int nightsStaying;
