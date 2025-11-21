@@ -26,7 +26,7 @@ void calculations(int campers, int nightsStaying, int firesPlanned, int& fireSta
 	double& lbsMarshmallow);
 int menuSelect();//int menu);
 void printSave(int foodCount, int gearCount, const string foodList[], const string gearList[], int length, string name,
-	int campers, int nightsStaying, int firesPlanned, int fireStarter, double lbsMarshmallow, char ch, bool raiseFlag);
+	int campers, int nightsStaying, int firesPlanned, int fireStarter, double lbsMarshmallow, char ch, bool& raiseFlag);
 void itFunc(int nightsStaying, string activity, bool& itinerary);
 void colorText();
 
@@ -326,7 +326,7 @@ int menuSelect()//int menu)
 }
 
 void printSave(int foodCount, int gearCount, const string foodList[], const string gearList[], int length, string name, 
-	int campers, int nightsStaying, int firesPlanned, int fireStarter, double lbsMarshmallow, char ch, bool raiseFlag)
+	int campers, int nightsStaying, int firesPlanned, int fireStarter, double lbsMarshmallow, char ch, bool& raiseFlag)
 
 {
 	int menu;
@@ -521,6 +521,7 @@ void printSave(int foodCount, int gearCount, const string foodList[], const stri
 			cout << "#  Invalid menu selection - no output   #" << endl
 				<< "# will be generated. Please restart the #" << endl
 				<< "#============     program to try again. #" << endl;
+			raiseFlag = true;
 			return; //exit program with error code if invalid menu selection
 		}
 	} while (menu == 1);
